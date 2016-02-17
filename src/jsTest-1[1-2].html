@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Force Layout Example 4</title>
+    <style>
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+button {
+    position: absolute;
+    width: 140px;
+}
+button#slow {
+    margin-top: 28px;
+}
+button#play {
+    margin-top: 56px;
+}
+button#reset {
+    margin-top: 82px;
+}
+button#noAnimation{
+    margin-top:108px;
+}
+button#stop{
+    margin-top:134px;
+}
+button#restart{
+    margin-top:162px;
+}
+button#pinNodes{
+    margin-top:190px;
+}
+button#disablePinNodes{
+    margin-top:218px;
+}
+/*button#increaseLinkDistance{
+    margin-top:236px;
+}*/
+
+
+    </style>
+</head>
+<body>
+    <button id='advance' title='Advance Layout One Increment'>
+       One Step
+    </button>
+    <button id='slow' title='Run Layout in Slow Motion'>
+        Slow
+    </button>
+    <button id='play' title='Run Layout at Full Speed'>
+        Full Speed
+    </button>
+    <button id='reset' title='Reset Layout to Beginning'>
+        Restart
+    </button>
+    <button id='noAnimation' title='No animation for the graph'>
+    No Animation
+    </button>
+    <button id='stop' title='Stops the force graph'>
+    Pause
+    </button>
+    <button id='restart' title='Re-enables animation'>
+    Animation
+    </button>
+    <button id='pinNodes' title='Enables pinning of nodes'>
+    Pin Nodes
+    </button>
+    <button id='disablePinNodes' title='Disables pinning of nodes'>
+    Disable Pin Nodes
+    </button>
+<!--     <button id='increaseLinkDistance' title='Increases link distance'>
+    Increase link distance
+    </button> -->
+    <!-- testScript1.js for cit data, testScript2.js for road set -->
+    <script src='http://d3js.org/d3.v3.min.js'></script>
+    <script src='testScript1.js'></script> 
+</body>
+</html>

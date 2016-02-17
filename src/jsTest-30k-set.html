@@ -1,0 +1,196 @@
+<html>
+<body>
+<style>
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+.node text {
+	font: 9px helvetica;	
+}
+</style>
+<script src='http://d3js.org/d3.v3.min.js'></script>
+<script>
+
+var width = 5000,
+    height = 5000;
+var svg = d3.select('body').append('svg')
+	.attr('width',width)
+	.attr('height',height);
+	
+var color = d3.scale.category20();
+
+var force = d3.layout.force()
+    .size([width, height]);
+function uniq_sort(a) {
+    return a.sort().filter(function(item, pos, ary) {
+        return !pos || item != ary[pos - 1];
+    })
+}
+
+var bus = [];
+var fromNode =[];
+var toNode = [];
+d3.tsv("cit-Test-30k.tsv", function(d) {
+  return {
+    FromNodeId: +d.FromNodeId,
+    ToNodeId: +d.ToNodeId,
+  };
+}, function(error, rows) {
+  for(i =0; i < rows.length; i++)
+  {
+  fromNode.push(rows[i].FromNodeId);
+  toNode.push(rows[i].ToNodeId);
+  bus.push(rows[i].FromNodeId);
+  bus.push(rows[i].ToNodeId);
+  }
+  
+  console.log(bus);
+  force.linkDistance(35)
+       .charge(-150);
+  
+  var uniq = [...new Set(bus)];
+  var nodes = [];
+  for(i = 0; i < uniq.length; i++)
+  {
+  nodes.push({name:uniq[i]});
+  }
+  var links = [];
+  //links.push({source:0,target:1});
+  for(i=0; i<fromNode.length;i++){
+  var fromIndex = fromNode[i];
+  var toIndex = toNode[i];
+   var searchSource = uniq.indexOf(fromIndex);
+  var searchTarget = uniq.indexOf(toIndex);
+ 
+  //changed from source:searchSource to test arrow config
+  //works!
+  links.push({source:searchTarget,target:searchSource});
+  }
+
+  
+  //code credit to coppelia.io
+      	var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+    function dragstart(d, i) {
+        force.stop() // stops the force auto positioning before you start dragging
+    }
+    function dragmove(d, i) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+    }
+    function dragend(d, i) {
+        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        force.resume();
+    }
+    function releasenode(d) {
+        d.fixed = false; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        //force.resume();
+    }
+      //end of coppelia.io pin code
+  
+  //
+  
+  //arrow code, credit to http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
+  svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 20)
+    .attr("refY", 0)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
+    .style("stroke", "#4679BD")
+    .style("opacity", "0.6");
+  
+    var link = svg.selectAll(".link")
+      .data(links)
+    .enter().append("line")
+      .attr("class", "link")
+      .style("marker-end","url(#suit)")
+      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+      
+       var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .on('dblclick',releasenode)
+      .call(node_drag); //new add
+      
+      node.append("circle")
+      .attr("r", 5)
+      .attr("fill",function(d,i){return color(i);});
+      
+      node.append("title") //hover over to see id num
+      	.attr("dx",12)
+      	.attr("dy",".35em")
+      	.text(function(d) {return d.name;})
+      	.style("stroke", "gray");
+      	
+      	
+     /* var node = svg.selectAll(".node") this is for id's next to nodes
+      .data(nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+      
+      node.append("circle")
+      .attr("r", 5)
+      .attr("fill",function(d,i){return color(i);});
+      
+      node.append("text")
+      	.attr("dx",12)
+      	.attr("dy",".35em")
+      	.text(function(d) {return d.name;})
+      	.style("stroke", "gray"); */
+      
+  force.nodes(nodes)
+  	.links(links)
+  	.on("tick", function() {
+  	link.attr("x1",function(d) {
+  	return d.source.x;
+  	})
+  	.attr("y1",function(d){
+  	return d.source.y;
+  	})
+  	.attr("x2",function(d){
+  	return d.target.x;
+  	})
+  	.attr("y2",function(d) {
+  	return d.target.y;
+  	});
+  	d3.selectAll("circle").attr("cx", function(d) {
+  	return d.x;
+  	})
+  	.attr("cy",function(d) {
+  	return d.y;
+  	});
+  	d3.selectAll("text").attr("x",function(d){
+  	return d.x;
+  	})
+  	.attr("y",function(d){
+  	return d.y;
+  	});
+  });
+  force.start();
+  
+   
+});
+console.log("we are here");
+</script>
+</body>
+</html>
