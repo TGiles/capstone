@@ -10,7 +10,7 @@ var animationStep = 750;
 var force = null;
 var dictionary ={};
 var initData = function() {
-    d3.tsv("outputFixed.tsv", function(d)
+    d3.tsv("Output1-3-2.tsv", function(d)
     {
         return {
             Paper: d.Paper,
@@ -18,6 +18,7 @@ var initData = function() {
             Date: d.Date,
             Title: d.Title,
             Authors: d.Authors,
+            Journal: d.Journal,
         };
 
     }, function(error, rows)
@@ -26,12 +27,18 @@ var initData = function() {
                 
         for(i = 0; i < rows.length; i++)
         {
+            if(rows[i].Journal =="")
+            {
+                rows[i].Journal = "None";
+            }
             dictionary[rows[i].Paper] = {Paper:rows[i].Paper,from:rows[i].From,
-                date:rows[i].Date,title:rows[i].Title,authors:rows[i].Authors,weight:0};
+                date:rows[i].Date,title:rows[i].Title,authors:rows[i].Authors,
+                journal:rows[i].Journal,weight:0};
 
 
         }
-       // console.log(dictionary);
+
+        console.log(dictionary);
 
         initForce();
     });
@@ -85,7 +92,9 @@ var initForce = function() {
   {
     //name:uniq[i]
    var a=uniq[i];
-   //console.log(a);
+   console.log(a);
+   //console.log(typeof(a));
+   //console.log(typeof(dictionary[a]));
   nodes.push(dictionary[a]);
 
   }
@@ -171,8 +180,8 @@ var initForce = function() {
         .attr("dx",12)
         .attr("dy",".35em")
         .text(function(d) {
-            var toReturn = d.title+"\n"+ "Paper ID: "+ d.Paper +"\n"+"Node's neighbors: "+ d.weight +"\n"+
-            "From: "+d.from +"\n"+ "Date: " +d.date +"\n" +"Authors: "+d.authors;
+            var toReturn = "Title: "+ d.title+"\n"+ "Paper ID: "+ d.Paper +"\n"+"Node's neighbors: "+ d.weight +"\n"+
+            "From: "+d.from +"\n"+ "Date: " +d.date +"\n" +"Authors: "+d.authors+"\n" +"Journal: "+d.journal;
             return toReturn;
             });
 
