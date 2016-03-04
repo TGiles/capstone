@@ -1,14 +1,17 @@
 
+//Stable build March 4th 2016
 var nodes = null,
     links = null;
 var skipAnimation = false;   
-var width = 640*2,
-    height = 480*2;
+//var width = 400,
+//    height = 850;
 var node = {};
 var link = [];
 var animationStep = 750;
 var force = null;
 var dictionary ={};
+var absDictionary = {};
+
 var initData = function() {
     d3.tsv("Output1-3-2.tsv", function(d)
     {
@@ -42,14 +45,36 @@ var initData = function() {
 
         initForce();
     });
+    //other dictionary for abstracts here
+    d3.tsv("OutputABS.tsv", function(d){
+        return {
+            Paper: d.Paper,
+            Abstract: d.Abstract,
+        };
+    },function(error, rows)
+    {
+        for(i=0; i<rows.length;i++)
+        {
+            absDictionary[rows[i].Paper] = {Paper:rows[i].Paper,abstract:rows[i].Abstract};
+        }
+    });
+   
 }
 
-
-
-var svg = d3.select('body').append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
+//var height = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+//var width = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+console.log(d3.select("body"));
+console.log(this);
+var svg = d3.select("#graphArea").append('svg:svg')
+    .attr('width', "100%")
+    .attr('height', 1000)
+    //.append("svg:g")
+   // .attr("transform","translate("+1000/4+","+"100%"/3+")");
+    //.attr('viewBox', 25, 25, height, width);
+svg.append("svg:rect")
+    .attr("width","100%")
+    .attr("height",1000)
+    .style("stroke","#000");
 var initForce = function() {
    // console.log(dictionary["9200010"]);
 
@@ -71,18 +96,6 @@ var initForce = function() {
   toNode.push(rows[i].ToNodeId);
   bus.push(rows[i].FromNodeId);
   bus.push(rows[i].ToNodeId);
-    test = rows[i].FromNodeId;
-    if(test === "9200010")
-    {
-        //console.log("fromNodeId problem. index: "+i);
-        //console.log(test);
-    }
-    test = rows[i].ToNodeId;
-    if(test === "9200010")
-    {
-       // console.log("toNodeId problem. index: "+i);
-        //console.log(test);
-    }
   }
   
   var uniq = [...new Set(bus)];
@@ -121,13 +134,13 @@ var initForce = function() {
   
   //console.log(nodes);
     force = d3.layout.force()
-        .size([width, height])
+        .size([this.outerHeight, this.outerWidth/2])
         .nodes(nodes)
         .links(links);
     
 
         force.linkDistance(35);
-        force.charge(-50);
+        force.charge(-75);
 
     //arrow code, credit to http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
   svg.append("defs").selectAll("marker")
@@ -174,6 +187,12 @@ var initForce = function() {
         .attr("fill",function(d,i){return color(i);})
         .attr('cx', function(d) { return d.x; })
         .attr('cy', function(d) { return d.y; })
+        .on('click', function(d){
+           // console.log(d);
+           abs = absDictionary[d.Paper].abstract;
+           str = d.title;
+            document.getElementById("absInfo").innerHTML="<b>"+"Title: "+"</b>"+str+"."+"<br>"+"<b>"+"Abstract: "+"</b>"+abs;
+        })
         .call(force.drag);
 
         node.append("title")
@@ -288,6 +307,7 @@ d3.select('#play').on('click', function() {
 });
 d3.select('#noAnimation').on('click', function(){
     skipAnimation=true;
+
     initForce();
     
 });
