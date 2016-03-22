@@ -11,7 +11,6 @@ var link = [];
 var animationStep = 750;
 var force = null;
 var dictionary ={};
-var chargeNum;
 
 var initData = function() {
 
@@ -38,7 +37,8 @@ var initData = function() {
 
 //var height = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 //var width = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-console.log(this);
+//console.log(d3.select("body"));
+//console.log(this);
 var svg = d3.select("#graphArea").append('svg:svg')
 .attr('width', "100%")
 .attr('height', 1200)
@@ -47,7 +47,7 @@ var svg = d3.select("#graphArea").append('svg:svg')
     //.attr('viewBox', 25, 25, height, width);
     svg.append("svg:rect")
     .attr("width","100%")
-    .attr("height",1200)
+    .attr("height",1000)
     .style("stroke","#000");
     var initForce = function() {
    // console.log(dictionary["9200010"]);
@@ -84,7 +84,7 @@ var svg = d3.select("#graphArea").append('svg:svg')
    nodes.push(dictionary[a]);
 
 }
-console.log(nodes.length);
+//console.log(nodes.length);
 var links = [];
   //console.log(nodes);
  // console.log(fromNode);
@@ -109,11 +109,11 @@ var links = [];
   //console.log(nodes);
   chargeNum = -nodes.length;
   force = d3.layout.force()
-  .size([this.outerHeight, this.outerWidth])
+  .size([this.outerHeight, this.outerWidth/2])
   .nodes(nodes)
   .gravity(1)
   .links(links);
-  console.log(svg);
+  //console.log(svg);
 
   force.linkDistance(35);
   force.charge(chargeNum);
@@ -145,6 +145,21 @@ var links = [];
     .style("marker-end","url(#suit)")
     .style("stroke-width", function(d) { return Math.sqrt(d.value); });
 
+/*var fisheye = d3.fisheye.circular()
+      .radius(120);
+svg.on("mousemove", function() {
+      force.stop();
+      fisheye.focus(d3.mouse(this));
+      d3.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
+          .attr("cx", function(d) { return d.fisheye.x; })
+          .attr("cy", function(d) { return d.fisheye.y; })
+          .attr("r", function(d) { return d.fisheye.z * 8; });
+      link.attr("x1", function(d) { return d.source.fisheye.x; })
+          .attr("y1", function(d) { return d.source.fisheye.y; })
+          .attr("x2", function(d) { return d.target.fisheye.x; })
+          .attr("y2", function(d) { return d.target.fisheye.y; });
+    });*/
+
     var color = d3.scale.category20();
     node = svg.selectAll('.node')
     .data(nodes)
@@ -164,7 +179,7 @@ var links = [];
     .attr('cx', function(d) { return d.x; })
     .attr('cy', function(d) { return d.y; })
     .on('click', function(d){
-        console.log(d);
+       // console.log(d);
         var xmlhttp;
         var thePaper;
         if(d===null)
@@ -213,9 +228,54 @@ var links = [];
             
 
         })
-    .call(force.drag);
-        console.log(node);
+    .call(force.drag)
+    .on('dblclick', connectedNodes);
 
+//---Insert-------
+
+//Toggle stores whether the highlighting is on
+var toggle = 0;
+
+//Create an array logging what is connected to what
+var linkedByIndex = {};
+for (i = 0; i < nodes.length; i++) {
+    linkedByIndex[i + "," + i] = 1;
+};
+links.forEach(function (d) {
+    linkedByIndex[d.source + "," + d.target] = 1;
+});
+//console.log(linkedByIndex);
+//This function looks up whether a pair are neighbours  
+function neighboring(a, b) {
+    return linkedByIndex[a.index + "," + b.index];
+}
+
+function connectedNodes() {
+
+    if (toggle == 0) {
+        //Reduce the opacity of all but the neighbouring nodes
+        d = d3.select(this).node().__data__;
+        node.style("opacity", function (o) {
+            return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
+        });
+        
+        link.style("opacity", function (o) {
+            return d.index==o.source.index | d.index==o.target.index ? 1 : 0.1;
+        });
+        
+        //Reduce the op
+        
+        toggle = 1;
+    } else {
+        //Put them back to opacity=1
+        node.style("opacity", 1);
+        link.style("opacity", 1);
+        toggle = 0;
+    }
+
+}
+
+//---End Insert---
         node.append("title")
         .attr("dx",12)
         .attr("dy",".35em")
@@ -257,7 +317,7 @@ var links = [];
             }
         });
        
-        console.log(node[0]);
+        //console.log(node[0]);
         if(skipAnimation==false)
             { console.log("we are here");
         force.on('tick', stepForce);}
@@ -373,6 +433,8 @@ d3.select('#stop').on('click', function(){
 });
 d3.select('#pinNodes').on('click', function(){
      //code credit to coppelia.io
+     alert("Pin nodes is now enabled. Click and drag a node to pin it to one spot. " +
+        "In order to release it, please double click the same node.")
      var node_drag = d3.behavior.drag()
      .on("dragstart", dragstart)
      .on("drag", dragmove)
@@ -402,7 +464,6 @@ d3.select('#chargeIncrease').on('click', function(){
 
 chargeNum = chargeNum + 15;
 force.charge(chargeNum);
-console.log("charge increased "+chargeNum);
 force.start();
 });
 d3.select('#chargeDecrease').on('click', function(){
@@ -411,7 +472,17 @@ chargeNum = chargeNum - 15;
 force.charge(chargeNum);
 force.start();
 });
-
+d3.select('#About').on('click', function(){
+   alert("This is an application for modeling physics papers "+
+    "from a database that spans 1992 to 2002. " +
+    "Please hover over the buttons to learn more about them."+
+    "\n"+"Double click any node to find its neighbors. "+
+    "Then double click again to shade the nodes back to normal.");
+});
+d3.select('#Contact').on('click', function(){
+    alert("Created by Timothy C. Giles Jr. \n"+
+        "timothy.giles.12@cnu.edu");
+});
 d3.select('#reset').on('click', function() {
 
     if (force) {
