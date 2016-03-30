@@ -31,12 +31,12 @@
     <![endif]-->
     <style>
     .node {
-  stroke: #fff;
-  stroke-width: 1.5px;
+  stroke: #333;
+  stroke-width: 1.0px;
 }
 .link {
   stroke: #999;
-  stroke-opacity: .6;
+  stroke-opacity: .9;
 }
 </style>
   </head>
@@ -57,8 +57,8 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#" id='About'>About</a></li>
+            <li><a href="#" id='Contact'>Contact</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -66,30 +66,34 @@
 
     </div><!-- /.container -->
 
-    <div id='theContainer' class="container">
+    <div id='theContainer' class="container-fluid">
       <div id='theRow' class="row">
-        <div id="graphArea"  class="col-md-9"> 
+        <div id="graphArea"  class="col-xs-9"> 
             <div id='actualArea' class="row">
               </div>
             </div>
 
-        <div  class="col-md-3">
-          <button type="button" class="btn btn-default" id='advance'>One step</button>
-         <button type="button" class="btn btn-default" id='slow'>Slow</button>
-         <button type="button" class="btn btn-default" id='play' title='test'>Full Speed</button>
-          <button type="button" id='reset' class="btn btn-default">Restart</button>
-           <button type="button" id='noAnimation' class="btn btn-default">No Animation</button>
-            <button type="button" id='stop' class="btn btn-default">Pause</button>
-            <button type="button" id='restart' class="btn btn-default" >
+        <div  class="col-xs-3">
+          <button type="button" class="btn btn-default" id='advance' title="Use this button to step through the animation process.">One step</button>
+         <button type="button" class="btn btn-default" id='slow' title="Use this button if you want to watch the animation in slow motion.">Slow</button>
+         <button type="button" class="btn btn-default" id='play' title='Runs the application at full speed.'>Full Speed</button>
+          <button type="button" id='reset' class="btn btn-default" title="Restarts the animation from scratch.">Restart</button>
+           <button type="button" id='noAnimation' class="btn btn-default" title="Use this in conjunction with full speed to run the animation to a steady state without seeing it">No Animation</button>
+            <button type="button" id='stop' class="btn btn-default" title="Use this to pause the animation at any given point.">Pause</button>
+            <button type="button" id='restart' class="btn btn-default" title="Use this button to restart the animation after pausing." >
             Animation
             </button>
-             <button type="button" id='pinNodes' class="btn btn-default" >
+             <button type="button" id='pinNodes' class="btn btn-default" title="Click this button to enable the pinning of nodes. An alert will appear to explain more." >
             Pin Nodes
             </button>
-             <button type="button" id='disablePinNodes' class="btn btn-default" >
-            Disable pin nodes
+             <button type="button" id='chargeIncrease' class="btn btn-default" title="Use this button to positively increase the charge of the graph, which will bring the nodes closer to each other." >
+            Increase charge
             </button>
-             <div id='absInfo' class="col-md-12">Where abstracts will go once a node is clicked.
+            <button type="button" id="chargeDecrease"
+            class="btn btn-default" title="Use this button to negatively increase the charge of the graph, which will repel the nodes from each other.">
+            Decrease charge
+            </button>
+             <div id='absInfo' class="col-xs-12">Where abstracts will go once a node is clicked.
              </div>
         </div>
       </div>
@@ -103,6 +107,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
     <script src='http://d3js.org/d3.v3.min.js'></script>
-    <script src='bootScript1-1.js'></script> 
+    <script type='text/javascript' src="http://bost.ocks.org/mike/fisheye/fisheye.js?0.0.3"> </script>
+    <script src='bootScript1-3.js'></script> 
   </body>
 </html>
