@@ -1,7 +1,7 @@
 # capstone
 My project for my CPSC 498 Capstone class. It is a data visualization project involving physics papers.
 The physics papers data is obtained from Stanford's Large Network Dataset Collection (http://snap.stanford.edu/data/)
-This project uses vanilla JavaScript, PHP, MySQL, and a data visualization JavaScript library D3.
+This project uses vanilla JavaScript, PHP, MySQL, and a data visualization JavaScript library D3 (https://d3js.org/).
 
 The main application takes in relational data between physics papers, one paper cites a different paper or papers, and creates
 a relationship between those papers. After going through an arbitrary amount of data rows, the application then plots all the papers
