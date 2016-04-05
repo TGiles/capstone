@@ -1,12 +1,7 @@
 
 //Stable build March 4th 2016
 //Modified build March 7 2016
-<<<<<<< HEAD
 var nodes = null, links = null;
-=======
-var nodes = null,
-links = null;
->>>>>>> refs/remotes/origin/master
 var skipAnimation = false;   
 //var width = 400,
 //    height = 850;
@@ -57,25 +52,15 @@ var svg = d3.select("#graphArea").append('svg:svg')
    // console.log(dictionary["9200010"]);
    svg.selectAll('*').remove();
 
-<<<<<<< HEAD
    d3.tsv("cit-test-set5k.tsv", function(d) {
-=======
-   d3.tsv("Cit-test-set.tsv", function(d) {
->>>>>>> refs/remotes/origin/master
       return {
         FromNodeId: d.FromNodeId, //reversed line 58 and 59 !!!
         ToNodeId: d.ToNodeId,
     };
 }, function(error, rows) {
-<<<<<<< HEAD
     bus = [];
     fromNode =[];
     toNode = [];
-=======
-    var bus = [];
-    var fromNode =[];
-    var toNode = [];
->>>>>>> refs/remotes/origin/master
     var animating = false;
     for(i =0; i < rows.length; i++)
     {
@@ -85,15 +70,9 @@ var svg = d3.select("#graphArea").append('svg:svg')
       bus.push(rows[i].ToNodeId);
   }
   
-<<<<<<< HEAD
     uniq = [...new Set(bus)];
  // console.log(uniq);
     nodes = [];
-=======
-  var uniq = [...new Set(bus)];
- // console.log(uniq);
- var nodes = [];
->>>>>>> refs/remotes/origin/master
  for(i = 0; i < uniq.length; i++)
  {
     //name:uniq[i]
@@ -105,11 +84,7 @@ var svg = d3.select("#graphArea").append('svg:svg')
 
 }
 //console.log(nodes.length);
-<<<<<<< HEAD
     links = [];
-=======
-var links = [];
->>>>>>> refs/remotes/origin/master
   //console.log(nodes);
  // console.log(fromNode);
   //console.log(toNode);
@@ -118,13 +93,8 @@ var links = [];
     //{
     // do something
     //}
-<<<<<<< HEAD
     searchSource = uniq.indexOf(fromNode[i]);
     searchTarget = uniq.indexOf(toNode[i]);
-=======
-    var searchSource = uniq.indexOf(fromNode[i]);
-    var searchTarget = uniq.indexOf(toNode[i]);
->>>>>>> refs/remotes/origin/master
   //console.log(searchSource);
   //console.log(nodes[searchSource]);
   //nodes[searchSource].weight++;
@@ -136,26 +106,16 @@ var links = [];
 }
 
   //console.log(nodes);
-<<<<<<< HEAD
   chargeNum = -(nodes.length/18);
  //chargeNum = -(Math.sqrt(nodes.length));
   force = d3.layout.force()
   .size([this.outerHeight*1.3, this.outerWidth*0.9])
-=======
-  chargeNum = -nodes.length;
-  force = d3.layout.force()
-  .size([this.outerHeight, this.outerWidth/2])
->>>>>>> refs/remotes/origin/master
   .nodes(nodes)
   .gravity(1)
   .links(links);
   //console.log(svg);
 
-<<<<<<< HEAD
   force.linkDistance(45);
-=======
-  force.linkDistance(35);
->>>>>>> refs/remotes/origin/master
   force.charge(chargeNum);
 
     //arrow code, credit to http://www.coppelia.io/2014/07/an-a-to-z-of-extra-features-for-the-d3-force-layout/
@@ -166,13 +126,8 @@ var links = [];
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 20)
     .attr("refY", 0)
-<<<<<<< HEAD
     .attr("markerWidth", 9.5)
     .attr("markerHeight", 8.5)
-=======
-    .attr("markerWidth", 6)
-    .attr("markerHeight", 6)
->>>>>>> refs/remotes/origin/master
     .attr("orient", "auto")
     .append("path")
     .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
@@ -189,7 +144,6 @@ var links = [];
     .attr("y2", function(d) { return d.target.y; })
     .style("marker-end","url(#suit)")
     .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-<<<<<<< HEAD
     maxNum = Math.max.apply(Math,nodes.map(function(o){
         return o.weight;
     }));
@@ -201,10 +155,6 @@ var links = [];
     scaler.domain([minNum, maxNum]);
     scaler.range([4,12]);
 var fisheye = d3.fisheye.circular()
-=======
-
-/*var fisheye = d3.fisheye.circular()
->>>>>>> refs/remotes/origin/master
       .radius(120);
 svg.on("mousemove", function() {
       force.stop();
@@ -212,33 +162,19 @@ svg.on("mousemove", function() {
       d3.selectAll("circle").each(function(d) { d.fisheye = fisheye(d); })
           .attr("cx", function(d) { return d.fisheye.x; })
           .attr("cy", function(d) { return d.fisheye.y; })
-<<<<<<< HEAD
           .attr("r", function(d) { return scaler(d.weight); });
-=======
-          .attr("r", function(d) { return d.fisheye.z * 8; });
->>>>>>> refs/remotes/origin/master
       link.attr("x1", function(d) { return d.source.fisheye.x; })
           .attr("y1", function(d) { return d.source.fisheye.y; })
           .attr("x2", function(d) { return d.target.fisheye.x; })
           .attr("y2", function(d) { return d.target.fisheye.y; });
-<<<<<<< HEAD
     });
 
     color = d3.scale.category20();
-=======
-    });*/
-
-    var color = d3.scale.category20();
->>>>>>> refs/remotes/origin/master
     node = svg.selectAll('.node')
     .data(nodes)
     .enter().append('circle')
     .attr('class', 'node')
-<<<<<<< HEAD
     /*.attr("r", function(d){
-=======
-    .attr("r", function(d){
->>>>>>> refs/remotes/origin/master
         if(Math.sqrt(d.weight)<5)
         {
             return 5;
@@ -247,12 +183,9 @@ svg.on("mousemove", function() {
         {
             return Math.sqrt(d.weight);
         }
-<<<<<<< HEAD
     })*/
     .attr("r", function(d){
         return scaler(d.weight);
-=======
->>>>>>> refs/remotes/origin/master
     })
     .attr("fill",function(d,i){return color(i);})
     .attr('cx', function(d) { return d.x; })
@@ -498,14 +431,8 @@ d3.select('#play').on('click', function() {
 });
 d3.select('#noAnimation').on('click', function(){
     skipAnimation=true;
-<<<<<<< HEAD
     alert("Skipping force animation, please press full speed and wait a few moments.");
     initForce();    
-=======
-
-    initForce();
-    
->>>>>>> refs/remotes/origin/master
 });
 d3.select('#restart').on('click', function(){
     skipAnimation=false;
@@ -577,10 +504,4 @@ d3.select('#reset').on('click', function() {
     initData();
 
 });
-<<<<<<< HEAD
-=======
-/*d3.select('#increaseLinkDistance').on('click',function(){
-    console.log(force);
-});*/
->>>>>>> refs/remotes/origin/master
 initData();
