@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FirstAttemptFileSystem {
+public class CleanEssentialData {
 	public static ArrayList<String> initString()
 	{
 		ArrayList<String>someList = new ArrayList<String>();
