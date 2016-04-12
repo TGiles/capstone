@@ -11,6 +11,6 @@ Your MySQL database must have the following columns in a table of your choosing:
 1. Journal, text, can be null.
 1. Abstract, mediumtext, cannot be null.
 
-After creating this in a MySQL database, run the initialize.php file to populate your database with the necessary records. Your table should be around 25.3 MiB after populating.
+After creating this in a MySQL database, modify the initialize.php file with your credentials, then run initialize.php to populate your database with the necessary records. Your table should be around 25.3 MiB after populating.
 
 After this, simply go to the bootstrap.html page and the application should be loaded up.
